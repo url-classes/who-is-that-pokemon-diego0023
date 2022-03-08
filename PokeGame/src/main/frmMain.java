@@ -40,6 +40,7 @@ public class frmMain extends javax.swing.JFrame {
         initComponents();
         horaActual.start();
         conexion.start();
+         visor.start();
     }
 
     public class PokeViewer extends Thread {
@@ -308,7 +309,7 @@ public class frmMain extends javax.swing.JFrame {
                             btnPokemon3.setText(PokemonAux.getName());
                         }
 
-                        visor.start();
+                       
                     } catch (IOException | InterruptedException ex) {
                         Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
                     }
