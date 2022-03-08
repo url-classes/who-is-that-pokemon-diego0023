@@ -21,23 +21,26 @@ import javax.swing.ImageIcon;
  * @author Miguel Matul <https://github.com/MigueMat4>
  */
 public class frmMain extends javax.swing.JFrame {
-    
+
     Pokemon whoIsThatPokemon; // objeto de la clase que hace match con los datos de la API
     Pokedex dexter = new Pokedex();
     PokeViewer visor = new PokeViewer();
     Reloj horaActual = new Reloj();
-
+    // hilo para hacer las busqueda de pokemones
+    ConexionAppiPokemon conexion = new ConexionAppiPokemon();
     /**
      * Creates new form frmMain
      */
     public frmMain() {
         initComponents();
         horaActual.start();
+        conexion.start();
     }
-    
+
     public class PokeViewer {
+
         public void mostrarSprites() {
-            if (whoIsThatPokemon != null){
+            if (whoIsThatPokemon != null) {
                 try {
                     lblSprite.setText("");
                     // obtengo la url del listado de cada uno de los sprites que me dio la API
@@ -46,7 +49,7 @@ public class frmMain extends javax.swing.JFrame {
                     lblSprite.setIcon(new ImageIcon(img));
                     // 1 segundo para cada cambio de sprite
                     Thread.sleep(1000);
-                        
+
                     url = new URL(whoIsThatPokemon.getSprites().get("back_default").toString());
                     img = ImageIO.read(url);
                     lblSprite.setIcon(new ImageIcon(img));
@@ -56,8 +59,7 @@ public class frmMain extends javax.swing.JFrame {
                 } catch (InterruptedException | IOException ex) {
                     Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-            else{
+            } else {
                 lblSprite.setText("?");
                 btnPokemon1.setText("???");
                 btnPokemon2.setText("???");
@@ -166,18 +168,47 @@ public class frmMain extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
-        try {
-            whoIsThatPokemon = dexter.buscarPokemon();
-            btnPokemon1.setText(whoIsThatPokemon.getName());
-            btnPokemon2.setText(whoIsThatPokemon.getName());
-            btnPokemon3.setText(whoIsThatPokemon.getName());
-            btnPokemon4.setText(whoIsThatPokemon.getName());
-            visor.mostrarSprites();
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        conexion.serch();
         btnJugar.setText("Jugar de nuevo");
     }//GEN-LAST:event_btnJugarActionPerformed
+
+    public class ConexionAppiPokemon extends Thread {
+
+        boolean flag = false;
+
+        public void serch(){
+            this.flag= true;
+        }
+        
+        @Override
+        public void run() {
+            while (true) {
+                // ciclo infiniti para que el proceso no termine y sea eliminado
+                while (this.flag) {
+                    try {
+                        whoIsThatPokemon = dexter.buscarPokemon();
+                        btnPokemon1.setText(whoIsThatPokemon.getName());
+                        btnPokemon2.setText(whoIsThatPokemon.getName());
+                        btnPokemon3.setText(whoIsThatPokemon.getName());
+                        btnPokemon4.setText(whoIsThatPokemon.getName());
+                        visor.mostrarSprites();
+                    } catch (IOException | InterruptedException ex) {
+                        Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                   this.flag = false;
+                }
+
+                // si no tiene nada que hacer espera un momento para no ser eliminado
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -213,28 +244,32 @@ public class frmMain extends javax.swing.JFrame {
             }
         });
     }
-    
+
     // clase para la hora del sistema. ¡No modificar!
     public class Reloj extends Thread {
+
         Calendar calendario;
-        
+
         @Override
         public void run() {
             while (true) {
                 String horaSistema = "";
                 calendario = Calendar.getInstance();
-                if (calendario.get(Calendar.HOUR_OF_DAY)<10)
-                    horaSistema += String.valueOf("0"+calendario.get(Calendar.HOUR_OF_DAY)) + ":";
-                else
+                if (calendario.get(Calendar.HOUR_OF_DAY) < 10) {
+                    horaSistema += String.valueOf("0" + calendario.get(Calendar.HOUR_OF_DAY)) + ":";
+                } else {
                     horaSistema += String.valueOf(calendario.get(Calendar.HOUR_OF_DAY)) + ":";
-                if (calendario.get(Calendar.MINUTE)<10)
-                    horaSistema += String.valueOf("0"+calendario.get(Calendar.MINUTE)) + ":";
-                else
+                }
+                if (calendario.get(Calendar.MINUTE) < 10) {
+                    horaSistema += String.valueOf("0" + calendario.get(Calendar.MINUTE)) + ":";
+                } else {
                     horaSistema += String.valueOf(calendario.get(Calendar.MINUTE)) + ":";
-                if (calendario.get(Calendar.SECOND)<10)
-                    horaSistema += String.valueOf("0"+calendario.get(Calendar.SECOND)) + ":";
-                else
+                }
+                if (calendario.get(Calendar.SECOND) < 10) {
+                    horaSistema += String.valueOf("0" + calendario.get(Calendar.SECOND)) + ":";
+                } else {
                     horaSistema += String.valueOf(calendario.get(Calendar.SECOND)) + ":";
+                }
                 horaSistema += String.valueOf(calendario.get(Calendar.MILLISECOND)) + " hrs";
                 lblHoraSistema.setText(horaSistema);
                 try {
