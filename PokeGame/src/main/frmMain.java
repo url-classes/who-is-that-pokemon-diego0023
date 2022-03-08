@@ -42,7 +42,7 @@ public class frmMain extends javax.swing.JFrame {
         conexion.start();
     }
 
-    public class PokeViewer {
+    public class PokeViewer extends Thread {
 
         public void mostrarSprites() {
             if (whoIsThatPokemon != null) {
@@ -70,6 +70,20 @@ public class frmMain extends javax.swing.JFrame {
                 btnPokemon2.setText("???");
                 btnPokemon3.setText("???");
                 btnPokemon4.setText("???");
+            }
+        }
+        
+        @Override
+        public void run(){
+            while(true){
+                
+                mostrarSprites();
+                
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }
@@ -294,7 +308,7 @@ public class frmMain extends javax.swing.JFrame {
                             btnPokemon3.setText(PokemonAux.getName());
                         }
 
-                        visor.mostrarSprites();
+                        visor.start();
                     } catch (IOException | InterruptedException ex) {
                         Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
                     }
