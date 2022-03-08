@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -28,6 +29,10 @@ public class frmMain extends javax.swing.JFrame {
     Reloj horaActual = new Reloj();
     // hilo para hacer las busqueda de pokemones
     ConexionAppiPokemon conexion = new ConexionAppiPokemon();
+    // objeto para guardar el nombre de los pokemones incorrectos
+    Pokemon PokemonAux;
+    int btn = 0;
+
     /**
      * Creates new form frmMain
      */
@@ -93,12 +98,32 @@ public class frmMain extends javax.swing.JFrame {
         lblSprite.setText("?");
 
         btnPokemon1.setText("???");
+        btnPokemon1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPokemon1ActionPerformed(evt);
+            }
+        });
 
         btnPokemon2.setText("???");
+        btnPokemon2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPokemon2ActionPerformed(evt);
+            }
+        });
 
         btnPokemon3.setText("???");
+        btnPokemon3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPokemon3ActionPerformed(evt);
+            }
+        });
 
         btnPokemon4.setText("???");
+        btnPokemon4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPokemon4ActionPerformed(evt);
+            }
+        });
 
         btnJugar.setText("Jugar");
         btnJugar.addActionListener(new java.awt.event.ActionListener() {
@@ -173,30 +198,107 @@ public class frmMain extends javax.swing.JFrame {
         btnJugar.setText("Jugar de nuevo");
     }//GEN-LAST:event_btnJugarActionPerformed
 
+    private void btnPokemon2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPokemon2ActionPerformed
+        // TODO add your handling code here:
+        ganar(btnPokemon2.getText());
+    }//GEN-LAST:event_btnPokemon2ActionPerformed
+
+    private void btnPokemon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPokemon1ActionPerformed
+        // TODO add your handling code here:
+        ganar(btnPokemon1.getText());
+    }//GEN-LAST:event_btnPokemon1ActionPerformed
+
+    private void btnPokemon3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPokemon3ActionPerformed
+        // TODO add your handling code here:
+        ganar(btnPokemon3.getText());
+    }//GEN-LAST:event_btnPokemon3ActionPerformed
+
+    private void btnPokemon4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPokemon4ActionPerformed
+        // TODO add your handling code here:
+        ganar(btnPokemon4.getText());
+    }//GEN-LAST:event_btnPokemon4ActionPerformed
+
     public class ConexionAppiPokemon extends Thread {
 
         boolean flag = false;
 
-        public void serch(){
-            this.flag= true;
+        public void serch() {
+            this.flag = true;
         }
-        
+
         @Override
         public void run() {
             while (true) {
                 // ciclo infiniti para que el proceso no termine y sea eliminado
                 while (this.flag) {
                     try {
+
+                        // pokemon correcto
                         whoIsThatPokemon = dexter.buscarPokemon();
-                        btnPokemon1.setText(whoIsThatPokemon.getName());
-                        btnPokemon2.setText(whoIsThatPokemon.getName());
-                        btnPokemon3.setText(whoIsThatPokemon.getName());
-                        btnPokemon4.setText(whoIsThatPokemon.getName());
+                        // asignar de manera ramdon el pokemon a un boton
+                        btn = (int) Math.floor(Math.random() * 4 + 1);
+                        switch (btn) {
+                            case 1:
+                                btnPokemon1.setText(whoIsThatPokemon.getName());
+                                break;
+                            case 2:
+                                btnPokemon2.setText(whoIsThatPokemon.getName());
+                                break;
+                            case 3:
+                                btnPokemon3.setText(whoIsThatPokemon.getName());
+                                break;
+                            case 4:
+                                btnPokemon4.setText(whoIsThatPokemon.getName());
+                                break;
+                            default:
+                                throw new AssertionError();
+                        }
+                        // llenar los demas botones(no es la forma mas eficiente pero no tengo tiempo para pensar en otra)
+                        if (btn == 1) {
+                            //pokemones de relleno 
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon2.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon3.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon4.setText(PokemonAux.getName());
+
+                        } else if (btn == 2) {
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon1.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon3.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon4.setText(PokemonAux.getName());
+                        }else if( btn == 3){
+                             PokemonAux = dexter.buscarPokemon();
+                            btnPokemon1.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon2.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon4.setText(PokemonAux.getName());
+                        }else{
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon1.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon2.setText(PokemonAux.getName());
+
+                            PokemonAux = dexter.buscarPokemon();
+                            btnPokemon3.setText(PokemonAux.getName());
+                        }
+
                         visor.mostrarSprites();
                     } catch (IOException | InterruptedException ex) {
                         Logger.getLogger(frmMain.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                   this.flag = false;
+                    this.flag = false;
                 }
 
                 // si no tiene nada que hacer espera un momento para no ser eliminado
@@ -207,6 +309,14 @@ public class frmMain extends javax.swing.JFrame {
                 }
             }
 
+        }
+    }
+    
+    public void ganar(String pokemon){
+        if(pokemon == whoIsThatPokemon.getName() ){
+             JOptionPane.showMessageDialog( this,"Adivinaste el Pokemon");
+        }else{
+              JOptionPane.showMessageDialog( this,"No es ese pokemon");
         }
     }
 
